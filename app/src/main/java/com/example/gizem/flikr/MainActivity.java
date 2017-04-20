@@ -3,11 +3,11 @@ package com.example.gizem.flikr;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TextView;
+
 
 import com.squareup.picasso.Picasso;
 
@@ -32,15 +32,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TableLayout layout= (TableLayout) findViewById(R.id.myLayout);
-        TextView tv= new TextView(this);
-        tv.setText("abv");
-        layout.addView(tv);
+        GridLayout layout= (GridLayout) findViewById(R.id.myLayout);
+        layout.setRowCount(images.length);
+        layout.setColumnCount(2);
+
         for (String image : images) {
             ImageView im = new ImageView(this);
             Picasso.with(this).load(image).into(im);
             layout.addView(im);
-            Log.i("IMAGE", image);
         }
 
     }
