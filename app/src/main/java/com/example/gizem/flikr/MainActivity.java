@@ -1,10 +1,13 @@
 package com.example.gizem.flikr;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             "https://www.looktheapp.com/api/pictures/pic-10.jpg",
             "https://www.looktheapp.com/api/pictures/pic-11.jpeg"
     };
-
+    public String clicked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,13 +39,29 @@ public class MainActivity extends AppCompatActivity {
         layout.setRowCount(images.length);
         layout.setColumnCount(2);
 
+
         for (String image : images) {
-            ImageView im = new ImageView(this);
-            Picasso.with(this).load(image).into(im);
+            clicked=image;
+            ImageButton im = new ImageButton(this);
+         im.setOnClickListener(new View.OnClickListener(){
+
+             @Override
+             public void onClick(View view){
+                 Intent intent= new Intent(getApplicationContext(),ImageDetail.class);
+                 intent.putExtra("src",clicked);
+                 startActivity(intent);
+             }
+         });
+
+
+
+            Picasso.with(this).load(image).resize(300,300).into(im);
             layout.addView(im);
         }
 
     }
+
+
 
 
 }
