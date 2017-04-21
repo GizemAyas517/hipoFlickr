@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
              }
          });
 
-
-
             Picasso.with(this).load(image).resize(300,300).into(im);
             layout.addView(im);
         }
