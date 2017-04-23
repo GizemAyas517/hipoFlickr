@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 import com.squareup.picasso.Picasso;
@@ -47,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
              @Override
              public void onClick(View view){
-                 Intent intent= new Intent(getApplicationContext(),ImageDetail.class);
+                 Intent intent= new Intent(MainActivity.this,ImageDetail.class);
+                 String text=clicked;
+                 Toast toast= Toast.makeText(MainActivity.this,text, Toast.LENGTH_SHORT);
+                 toast.show();
                  intent.putExtra("src",clicked);
                  startActivity(intent);
              }
