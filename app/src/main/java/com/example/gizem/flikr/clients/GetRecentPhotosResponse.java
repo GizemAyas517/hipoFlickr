@@ -12,6 +12,6 @@ public class GetRecentPhotosResponse {
     public FlickrImageResponse photos;
 
     @SerializedName("stat")
-    public int stat;
+    public String stat;
 
 }

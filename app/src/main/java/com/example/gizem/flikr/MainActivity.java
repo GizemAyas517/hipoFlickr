@@ -32,31 +32,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] images = {
-            "https://www.looktheapp.com/api/pictures/pic-1.jpg",
-            "https://www.looktheapp.com/api/pictures/pic-2.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-3.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-3.jpg",
-            "https://www.looktheapp.com/api/pictures/pic-4.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-5.jpg",
-            "https://www.looktheapp.com/api/pictures/pic-6.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-7.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-8.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-9.jpeg",
-            "https://www.looktheapp.com/api/pictures/pic-10.jpg",
-            "https://www.looktheapp.com/api/pictures/pic-11.jpeg"
-    };
-    public String clicked;
 
-
+    public List<FlickrImage> images;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       final GridLayout layout= (GridLayout) findViewById(R.id.myLayout);
-        layout.setRowCount(images.length);
+        final GridLayout layout= (GridLayout) findViewById(R.id.myLayout);
+        layout.setRowCount(10);
         layout.setColumnCount(2);
 
         String API_BASE_URL= "https://api.flickr.com/services/rest/";
@@ -76,32 +61,41 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<GetRecentPhotosResponse>() {
             @Override
             public void onResponse(Call<GetRecentPhotosResponse> call, Response<GetRecentPhotosResponse> response) {
-                GetRecentPhotosResponse photosResponse=response.body();
-                List<FlickrImage>images= (List<FlickrImage>) photosResponse.photos;
-                //get the urls
-                for(FlickrImage image: images){
+                GetRecentPhotosResponse photosResponse = response.body();
+                images = photosResponse.photos.photo;
+
+                for (final FlickrImage image : images) {
                     ImageButton im = new ImageButton(MainActivity.this);
-                    im.setOnClickListener(new View.OnClickListener(){
+                    im.setOnClickListener(new View.OnClickListener() {
+                        String url = image.url();
 
                         @Override
-                        public void onClick(View view){
-                            Intent intent= new Intent(MainActivity.this,ImageDetail.class);
-                            intent.putExtra("src",clicked);
+                        public void onClick(View view) {
+                            Intent intent = new Intent(MainActivity.this, ImageDetail.class);
+                            intent.putExtra("src", url);
                             startActivity(intent);
                         }
                     });
 
-                    Picasso.with(MainActivity.this).load(image.url()).resize(400,400).into(im);
+                    Picasso.with(MainActivity.this).load(image.url()).resize(400, 400).into(im);
                     layout.addView(im);
+
 
                 }
             }
 
             @Override
             public void onFailure(Call<GetRecentPhotosResponse> call, Throwable t) {
+                try{
+                    throw t;
+                }catch(Throwable t1){
+                    t1.printStackTrace();
+                }
 
             }
         });
+
+
 
 
     }
