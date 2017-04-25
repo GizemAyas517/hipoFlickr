@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public List<FlickrImage> images=new ArrayList<FlickrImage>();
-    public List<FlickrImage> oldImages;
-    public List<FlickrImage> search;
+    public ArrayList<ImageButton> oldImages;
+
     public ArrayList<ImageButton> removable= new ArrayList<>();
     MaterialSearchView searchView;
     int page=1;
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // if diff is zero, then the bottom has been reached
         if (diff < 10) {
             page++;
-            Toast.makeText(this, "bööö  00" + page, Toast.LENGTH_SHORT).show();
+
             searchResult();
         }
 
@@ -113,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void searchResult(){
 
+        if(!text.isEmpty()){
+            for(ImageButton img: oldImages ){
+                layout.removeView(img);
+            }
+        }
+        oldImages=new ArrayList<>();
 
         for(ImageButton im: removable){
             layout.removeView(im);
@@ -151,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("RESPONSE",image.url());
                     ImageButton im = new ImageButton(MainActivity.this);
                     removable.add(im);
+                    oldImages.add(im);
                     im.setOnClickListener(new View.OnClickListener() {
                         String url = image.url();
                         @Override
