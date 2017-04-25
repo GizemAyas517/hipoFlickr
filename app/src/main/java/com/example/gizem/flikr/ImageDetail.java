@@ -24,8 +24,7 @@ public class ImageDetail extends AppCompatActivity {
         setContentView(R.layout.activity_image_detail);
         RelativeLayout rl= (RelativeLayout) findViewById(R.id.activity_image_detail);
         im= new ImageView(this);
-        Toast t= Toast.makeText(this,"helos",Toast.LENGTH_SHORT);
-        t.show();
+
         Callback imageLoadedCallback= new Callback(){
 
             public void onSuccess(){
