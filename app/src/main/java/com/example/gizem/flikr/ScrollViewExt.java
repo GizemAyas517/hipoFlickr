@@ -3,9 +3,6 @@ package com.example.gizem.flikr;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 /**
  * Created by gizem on 4/25/2017.

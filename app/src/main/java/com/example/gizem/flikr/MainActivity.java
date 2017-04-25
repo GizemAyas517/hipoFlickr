@@ -2,7 +2,7 @@ package com.example.gizem.flikr;
 
 
 import android.content.Intent;
-import android.content.SyncStatusObserver;
+
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,11 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 
 
@@ -45,26 +41,39 @@ public class MainActivity extends AppCompatActivity {
     public List<FlickrImage> images=new ArrayList<FlickrImage>();
     public ArrayList<ImageButton> oldImages= new ArrayList<>();
 
-    MaterialSearchView searchView;
-    int page=1;
-    Toolbar tb;
-    String text="";
-    String last_text="last";
-    GridLayout layout;
-    ScrollView scrollView;
+    public MaterialSearchView searchView;
+    public int page=1;
+    public Toolbar tb;
+    public String text="";
+    public String last_text="last";
+    public GridLayout layout;
+    public ScrollView scrollView;
+
+    public String API_BASE_URL= "https://api.flickr.com/services/rest/";
+    public String API_KEY = "97472a1d0e284013bb9b575b9205d61a";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prepareLayout();
+        prepareToolbar();
+        prepareSearchview();
+        searchResult();
+    }
+
+    public void prepareLayout(){
         layout= (GridLayout) findViewById(R.id.myLayout);
         layout.setRowCount(10);
         layout.setColumnCount(2);
 
+    }
+    public void prepareToolbar(){
         tb= (Toolbar) findViewById(R.id.toolBar);  //ADDED THE TOOLBAR
         setSupportActionBar(tb);
         getSupportActionBar().setTitle("Flickr");
         tb.setTitleTextColor(Color.parseColor("#FFFFFF"));
-
+    }
+    public void prepareSearchview(){
         scrollView= (ScrollView) findViewById(R.id.scrollView);     //SETUP THE SEARCHVIEW
         searchView= (MaterialSearchView) findViewById(R.id.searchView);
         searchView.setTextColor(Color.parseColor("#FFFFFF"));
@@ -83,41 +92,30 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        searchResult();
+
     }
 
 
     public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {  //TO DETECT IF THE USER HIT BOTTOM ON PAGE
-        // We take the last son in the scrollview
         View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
-
-        // if diff is zero, then the bottom has been reached
         if (diff < 3) {
             scrollView.scrollBy(0, -5);
             page++;
-
             searchResult();
-
         }
-
     }
 
     public void searchResult(){
-
-      //  Toast.makeText(this,"Im at page"+ page,Toast.LENGTH_SHORT).show();
-
-       if(!text.equals(last_text)){
-
+        if(!text.equals(last_text)){
             for(ImageButton img: oldImages ){
                 layout.removeView(img);
             }
-           oldImages=new ArrayList<>();
-           last_text = text;
+            oldImages=new ArrayList<>();
+            last_text = text;
         }
 
-        String API_BASE_URL= "https://api.flickr.com/services/rest/";
-        String API_KEY = "97472a1d0e284013bb9b575b9205d61a";
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         Retrofit.Builder builder= new Retrofit.Builder()
@@ -132,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
         if(text.isEmpty()){
             call = client.photosForUser(API_KEY,page);
         } else {
-            Log.i("RESPONSE", "Search=" + text);
             call= client.searchResult(API_KEY,text, page);
         }
 
@@ -140,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<GetRecentPhotosResponse> call, Response<GetRecentPhotosResponse> response) {
                 GetRecentPhotosResponse photosResponse = response.body();
-
                 images = photosResponse.photos.photo;
-
                 for (final FlickrImage image : images) {
                     ImageButton im = new ImageButton(MainActivity.this);
                     oldImages.add(im);
@@ -188,8 +183,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-
 
 
 }
