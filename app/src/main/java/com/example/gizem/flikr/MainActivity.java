@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     public List<FlickrImage> images=new ArrayList<FlickrImage>();
-    public ArrayList<ImageButton> oldImages;
+    public ArrayList<ImageButton> oldImages= new ArrayList<>();
 
-    public ArrayList<ImageButton> removable= new ArrayList<>();
     MaterialSearchView searchView;
     int page=1;
     Toolbar tb;
     String text="";
+    String last_text="last";
     GridLayout layout;
     ScrollView scrollView;
     @Override
@@ -77,12 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 text=newText;
-                for(ImageButton but: removable){
-                    layout.removeView(but);
-                }
 
-
-                Toast.makeText(getBaseContext(),"IM HEREEEE", Toast.LENGTH_SHORT).show();
                 searchResult();
 
                 return false;
@@ -98,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
 
         // if diff is zero, then the bottom has been reached
-        if (diff < 10) {
+        if (diff < 3) {
+            scrollView.scrollBy(0, -5);
             page++;
 
             searchResult();
@@ -111,22 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
       //  Toast.makeText(this,"Im at page"+ page,Toast.LENGTH_SHORT).show();
 
-    /*    if(!text.isEmpty()){
+       if(!text.equals(last_text)){
 
             for(ImageButton img: oldImages ){
                 layout.removeView(img);
             }
+           oldImages=new ArrayList<>();
+           last_text = text;
         }
-        oldImages=new ArrayList<>();
-
-            for(ImageButton im: removable){
-                Toast.makeText(this,"IM HEREEEE", Toast.LENGTH_SHORT).show();
-           layout.removeView(im);
-        }
-        removable= new ArrayList<>();
-
-*/
-        removable= new ArrayList<ImageButton>();
 
         String API_BASE_URL= "https://api.flickr.com/services/rest/";
         String API_KEY = "97472a1d0e284013bb9b575b9205d61a";
@@ -144,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
         if(text.isEmpty()){
             call = client.photosForUser(API_KEY,page);
         } else {
-            call= client.searchResult(API_KEY,text);
+            Log.i("RESPONSE", "Search=" + text);
+            call= client.searchResult(API_KEY,text, page);
         }
 
         call.enqueue(new Callback<GetRecentPhotosResponse>() {
@@ -156,8 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (final FlickrImage image : images) {
                     ImageButton im = new ImageButton(MainActivity.this);
-                    removable.add(im);
-             //       oldImages.add(im);
+                    oldImages.add(im);
                     im.setOnClickListener(new View.OnClickListener() {
                         String url = image.url();
                         @Override

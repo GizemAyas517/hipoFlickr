@@ -17,10 +17,11 @@ public interface FlickrClientInterface {
             @Query("page") Integer page
 
             );
-    @GET("https://api.flickr.com/services/rest/?method=flickr.photos.search&per_page=10&page=1&format=json&nojsoncallback=1")
+    @GET("https://api.flickr.com/services/rest/?method=flickr.photos.search&per_page=10&text=dog&format=json&sort=relevance&json&nojsoncallback=1")
     Call<GetRecentPhotosResponse> searchResult(
             @Query("api_key") String api_key,
-            @Query("text") String text
+            @Query("text") String text,
+            @Query("page") Integer page
     );
 
 }
