@@ -3,6 +3,9 @@ package com.example.gizem.flikr;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by gizem on 4/25/2017.
@@ -38,6 +41,7 @@ public class ScrollViewExt extends ScrollView {
         try {
             MainActivity activity = (MainActivity) getContext();
             activity.onScrollChanged(this, l, t, oldl, oldt);
+
         } catch (Exception e){
             e.printStackTrace();
         }

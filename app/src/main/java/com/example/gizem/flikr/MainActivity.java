@@ -60,44 +60,39 @@ public class MainActivity extends AppCompatActivity {
         layout.setRowCount(10);
         layout.setColumnCount(2);
 
-        scrollView= (ScrollView) findViewById(R.id.scrollView);
-
-
-
-        tb= (Toolbar) findViewById(R.id.toolBar);
+        tb= (Toolbar) findViewById(R.id.toolBar);  //ADDED THE TOOLBAR
         setSupportActionBar(tb);
         getSupportActionBar().setTitle("Flickr");
         tb.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
+        scrollView= (ScrollView) findViewById(R.id.scrollView);     //SETUP THE SEARCHVIEW
         searchView= (MaterialSearchView) findViewById(R.id.searchView);
         searchView.setTextColor(Color.parseColor("#FFFFFF"));
-
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener(){
-
-
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-
-
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 text=newText;
+                for(ImageButton but: removable){
+                    layout.removeView(but);
+                }
+
+
+                Toast.makeText(getBaseContext(),"IM HEREEEE", Toast.LENGTH_SHORT).show();
                 searchResult();
+
                 return false;
             }
         });
-
-
-
         searchResult();
     }
 
 
-    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {  //TO DETECT IF THE USER HIT BOTTOM ON PAGE
         // We take the last son in the scrollview
         View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
@@ -107,25 +102,31 @@ public class MainActivity extends AppCompatActivity {
             page++;
 
             searchResult();
+
         }
 
     }
 
     public void searchResult(){
 
-        if(!text.isEmpty()){
+      //  Toast.makeText(this,"Im at page"+ page,Toast.LENGTH_SHORT).show();
+
+    /*    if(!text.isEmpty()){
+
             for(ImageButton img: oldImages ){
                 layout.removeView(img);
             }
         }
         oldImages=new ArrayList<>();
 
-        for(ImageButton im: removable){
-            layout.removeView(im);
+            for(ImageButton im: removable){
+                Toast.makeText(this,"IM HEREEEE", Toast.LENGTH_SHORT).show();
+           layout.removeView(im);
         }
         removable= new ArrayList<>();
 
-
+*/
+        removable= new ArrayList<ImageButton>();
 
         String API_BASE_URL= "https://api.flickr.com/services/rest/";
         String API_KEY = "97472a1d0e284013bb9b575b9205d61a";
@@ -154,10 +155,9 @@ public class MainActivity extends AppCompatActivity {
                 images = photosResponse.photos.photo;
 
                 for (final FlickrImage image : images) {
-                    Log.i("RESPONSE",image.url());
                     ImageButton im = new ImageButton(MainActivity.this);
                     removable.add(im);
-                    oldImages.add(im);
+             //       oldImages.add(im);
                     im.setOnClickListener(new View.OnClickListener() {
                         String url = image.url();
                         @Override
@@ -182,8 +182,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
